@@ -219,6 +219,28 @@ Phaser.Animation.prototype = {
     },
 
     /**
+    * Plays this animation, continuing from the current frame of the old animation if it is part of this animation.
+    *
+    * @method Phaser.Animation#playOn
+    * @param {number} [frameRate=null] - The framerate to play the animation at. The speed is given in frames per second. If not provided the previously set frameRate of the Animation is used.
+    * @param {boolean} [loop=false] - Should the animation be looped after playback. If not provided the previously set loop value of the Animation is used.
+    * @param {boolean} [killOnComplete=false] - If set to true when the animation completes (only happens if loop=false) the parent Sprite will be killed.
+    * @return {Phaser.Animation} - A reference to this Animation instance.
+    */
+    playOn: function (frameRate, loop, killOnComplete) {
+        var oldName = this.name,
+            oldFrame = this.frame;
+
+        this.play(frameRate, loop, killOnComplete);
+
+        if (oldName !== this.name && (this._frames || []).indexOf(oldFrame) >= 0) {
+            this.currentAnim.setFrame(oldFrame);
+        }
+
+        return this;
+    }
+
+    /**
     * Sets this animation back to the first frame and restarts the animation.
     *
     * @method Phaser.Animation#restart
